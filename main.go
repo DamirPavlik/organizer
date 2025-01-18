@@ -34,10 +34,7 @@ func main() {
 	}
 
 	for _, v := range files {
-		if strings.HasSuffix(v.Name(), ".jpg") {
-			images = append(images, v.Name())
-		}
-		if strings.HasSuffix(v.Name(), ".png") {
+		if strings.HasSuffix(v.Name(), ".jpg") || strings.HasSuffix(v.Name(), ".png") {
 			images = append(images, v.Name())
 		}
 		if strings.HasSuffix(v.Name(), ".mp4") {
@@ -56,6 +53,12 @@ func main() {
 	}
 
 	for _, img := range images {
-		fmt.Println("img: ", img)
+		sourcePath := filepath.Join(mainPath, img)
+		destPath := filepath.Join("images", img)
+		if err := os.Rename(sourcePath, destPath); err != nil {
+			fmt.Printf("failed to move img %s: %v\n", img, err)
+		} else {
+			fmt.Printf("moved img: %s\n", img)
+		}
 	}
 }
