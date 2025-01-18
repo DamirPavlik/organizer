@@ -16,16 +16,9 @@ func main() {
 	createDir("images")
 	createDir("videos")
 
-	f, err := os.Open(mainPath)
+	files, err := readFiles(mainPath)
 	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	files, err := f.Readdir(0)
-	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatalf("err reading files: %v", err)
 	}
 
 	for _, v := range files {
@@ -62,4 +55,19 @@ func createDir(dirName string) {
 	if err := os.Mkdir(dirName, os.ModePerm); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func readFiles(path string) ([]os.FileInfo, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open dir: %w", err)
+	}
+	defer f.Close()
+
+	files, err := f.Readdir(0)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read dir: %w", err)
+	}
+
+	return files, nil
 }
