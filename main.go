@@ -13,13 +13,8 @@ func main() {
 	var videos []string
 	mainPath := "../test-organizer"
 
-	if err := os.Mkdir("images", os.ModePerm); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := os.Mkdir("videos", os.ModePerm); err != nil {
-		log.Fatal(err)
-	}
+	createDir("images")
+	createDir("videos")
 
 	f, err := os.Open(mainPath)
 	if err != nil {
@@ -60,5 +55,11 @@ func main() {
 		} else {
 			fmt.Printf("moved img: %s\n", img)
 		}
+	}
+}
+
+func createDir(dirName string) {
+	if err := os.Mkdir(dirName, os.ModePerm); err != nil {
+		log.Fatal(err)
 	}
 }
