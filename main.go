@@ -9,8 +9,6 @@ import (
 )
 
 func main() {
-	var images []string
-	var videos []string
 	mainPath := "../test-organizer"
 
 	createDir("images")
@@ -21,14 +19,7 @@ func main() {
 		log.Fatalf("err reading files: %v", err)
 	}
 
-	for _, v := range files {
-		if strings.HasSuffix(v.Name(), ".jpg") || strings.HasSuffix(v.Name(), ".png") {
-			images = append(images, v.Name())
-		}
-		if strings.HasSuffix(v.Name(), ".mp4") {
-			videos = append(videos, v.Name())
-		}
-	}
+	images, videos := categorizeFiles(files)
 
 	for _, vid := range videos {
 		sourcePath := filepath.Join(mainPath, vid)
@@ -70,4 +61,16 @@ func readFiles(path string) ([]os.FileInfo, error) {
 	}
 
 	return files, nil
+}
+
+func categorizeFiles(files []os.FileInfo) (images, videos []string) {
+	for _, file := range files {
+		if strings.HasSuffix(file.Name(), ".jpg") || strings.HasSuffix(file.Name(), ".png") {
+			images = append(images, file.Name())
+		}
+		if strings.HasSuffix(file.Name(), ".mp4") {
+			videos = append(videos, file.Name())
+		}
+	}
+	return images, videos
 }
