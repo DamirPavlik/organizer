@@ -21,25 +21,8 @@ func main() {
 
 	images, videos := categorizeFiles(files)
 
-	for _, vid := range videos {
-		sourcePath := filepath.Join(mainPath, vid)
-		destPath := filepath.Join("videos", vid)
-		if err := os.Rename(sourcePath, destPath); err != nil {
-			fmt.Printf("failed to move video %s: %v\n", vid, err)
-		} else {
-			fmt.Printf("moved vid: %s\n", vid)
-		}
-	}
-
-	for _, img := range images {
-		sourcePath := filepath.Join(mainPath, img)
-		destPath := filepath.Join("images", img)
-		if err := os.Rename(sourcePath, destPath); err != nil {
-			fmt.Printf("failed to move img %s: %v\n", img, err)
-		} else {
-			fmt.Printf("moved img: %s\n", img)
-		}
-	}
+	moveFiles(images, mainPath, "images")
+	moveFiles(videos, mainPath, "videos")
 }
 
 func createDir(dirName string) {
@@ -73,4 +56,17 @@ func categorizeFiles(files []os.FileInfo) (images, videos []string) {
 		}
 	}
 	return images, videos
+}
+
+func moveFiles(fileList []string, sourceDir string, destDir string) {
+	for _, file := range fileList {
+		sourcePath := filepath.Join(sourceDir, file)
+		destPath := filepath.Join(destDir, file)
+
+		if err := os.Rename(sourcePath, destPath); err != nil {
+			fmt.Printf("Failed to move %s to %s: %v\n", file, destDir, err)
+		} else {
+			fmt.Printf("Moved %s to %s\n", file, destDir)
+		}
+	}
 }
